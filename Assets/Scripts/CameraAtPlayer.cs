@@ -5,7 +5,7 @@ using UnityEngine;
 public class CameraAtPlayer : MonoBehaviour {
 
     Transform _player;
-    float Offset = 20;
+    public float Offset = 10;
 
 	// Use this for initialization
 	void Start () {
