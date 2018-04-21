@@ -4,7 +4,7 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - HurtPlayer
+  - Enemy
   layers:
   - Default
   - TransparentFX
@@ -15,8 +15,8 @@ TagManager:
   - 
   - 
   - Sprites
-  - 
-  - 
+  - Hitable
+  - Attack
   - 
   - 
   - 

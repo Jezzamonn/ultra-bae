@@ -24,7 +24,7 @@ GameObject:
   - component: {fileID: 23359390343241484}
   - component: {fileID: 54958947309831932}
   - component: {fileID: 114123580670719694}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -211,6 +211,7 @@ MonoBehaviour:
   Speed: 7
   HurtPushBack: 5
   HurtJump: 4
+  Bullet: {fileID: 54102944799403124, guid: eb92fb0863f7a4619b7f1e0bc4fb1312, type: 2}
 --- !u!114 &114149203278282950
 MonoBehaviour:
   m_ObjectHideFlags: 1
