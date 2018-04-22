@@ -8,10 +8,16 @@ public class Player : MonoBehaviour
     public float Speed = 1f;
     public float HurtPushBack = 1f;
     public float HurtJump = 1f;
+    public int MaxHealth = 2;
+    public int Health = 2;
+    private float _invincibleCount = 0;
+    private float _invincibleTime = 2.5f;
 
     public int NumBullets = 3;
     public float BulletSpread = 60f;
     public float BulletCooldown = 0.4f;
+    public float BulletSpeed = 5f;
+    public float BulletLength = 10f;
 
     private float _bulletCount = 0;
 
@@ -40,6 +46,9 @@ public class Player : MonoBehaviour
         {
             _bulletCount -= Time.deltaTime;
         }
+        if (_invincibleCount > 0) {
+            _invincibleCount -= Time.deltaTime;
+        }
 
         // Get the ground normal
         RaycastHit hit;
@@ -64,8 +73,9 @@ public class Player : MonoBehaviour
                     bulletUp);
 
                 bullet.Dir = dir;
-
                 bullet.transform.forward = dir;
+                bullet.Speed = BulletSpeed;
+                bullet.Length = BulletLength;
             }
             _bulletCount = BulletCooldown;
         }
@@ -73,7 +83,10 @@ public class Player : MonoBehaviour
 
     void FixedUpdate()
     {
-        _body.MovePosition(_body.position + Speed * Time.fixedDeltaTime * _moveDir);
+        // Can't move if you're dead, can you??
+        if (Health > 0) {
+            _body.MovePosition(_body.position + Speed * Time.fixedDeltaTime * _moveDir);
+        }
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -90,10 +103,21 @@ public class Player : MonoBehaviour
     {
         if (other.tag == "HurtPlayer" || other.tag == "Enemy")
         {
-            _body.AddForce(
-                HurtPushBack * (transform.position - other.transform.position) +
-                HurtJump * Vector3.up,
-                ForceMode.Impulse);
+            TakeDamage(other.transform.position);
         }
+    }
+
+    private void TakeDamage(Vector3 flyAwayFrom) {
+        if (_invincibleCount <= 0) {
+            Health--;
+            _invincibleCount = _invincibleTime;
+            // TODO: sound effect
+            // TODO: die
+        }
+        // TODO: Project on plane here
+        _body.AddForce(
+            HurtPushBack * (transform.position - flyAwayFrom) +
+            HurtJump * Vector3.up,
+            ForceMode.Impulse);
     }
 }

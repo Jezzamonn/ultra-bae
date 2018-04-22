@@ -49,11 +49,11 @@ public class LilGuy : Enemy {
     public override void Die()
     {
         base.Die();
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < 3; i++)
         {
             Rigidbody coin = Instantiate(
                 Coin,
-                transform.position + Random.insideUnitSphere,
+                transform.position + Vector3.up + Random.insideUnitSphere,
                 Quaternion.identity);
             coin.AddForce(Random.insideUnitSphere + Vector3.up, ForceMode.Impulse);
         }
