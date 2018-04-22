@@ -5,6 +5,7 @@ using System.Collections.Generic;
 public class Level : MonoBehaviour
 {
     public List<Room> RoomTemplates;
+    public Transform Door;
 
     private List<Room> ActualRooms;
     private List<Room> FreeRooms;
@@ -19,8 +20,17 @@ public class Level : MonoBehaviour
 	// Update is called once per frame
 	void Update()
 	{
-		
+        //if (Input.GetButtonDown("Fire1")) {
+        //    DestroyAll();
+        //    Generate();
+        //}
 	}
+
+    void DestroyAll() {
+        foreach (var room in ActualRooms) {
+            Destroy(room.gameObject);
+        }
+    }
 
     void Generate() {
         ActualRooms = new List<Room>();
@@ -30,7 +40,7 @@ public class Level : MonoBehaviour
         ActualRooms.Add(firstRoom);
         FreeRooms.Add(firstRoom);
 
-        for (int i = 0; i < 10; i++)
+        while (ActualRooms.Count < 25)
         {
             Room parentRoom = FreeRooms.PickRandom();
             Transform pos = parentRoom.GetRoomPos();
@@ -52,8 +62,13 @@ public class Level : MonoBehaviour
 
             // Quick, non-foolproof way to check if things are touching
             bool validRoom = true;
+            Bounds b = newRoom.GetBounds();
+            b.Expand(-1f);
             foreach (Room room in ActualRooms) {
-                if ((room.transform.position - newRoom.transform.position).sqrMagnitude < 6 * 6) {
+                if (room == parentRoom) {
+                    continue;
+                }
+                if (b.Intersects(room.GetBounds())) {
                     // Probably too close. Destroy the room and try again!
                     Destroy(newRoom.gameObject);
                     validRoom = false;
@@ -67,11 +82,12 @@ public class Level : MonoBehaviour
             FreeRooms.Add(newRoom);
             ActualRooms.Add(newRoom);
             parentRoom.RemoveRoomPos(pos);
+            newRoom.RemoveRoomPos(newPos);
         }
 
         foreach (Room room in ActualRooms)
         {
-            room.ClearExitMarkers();
+            room.ClearExitMarkers(Door);
         }
     }
 }

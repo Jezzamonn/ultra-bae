@@ -20,8 +20,15 @@ public class Room : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		
 	}
+
+    public Bounds GetBounds() {
+        Bounds b = new Bounds(transform.position, 0.1f * Vector3.one);
+        foreach (Transform child in transform) {
+            b.Encapsulate(child.position);
+        }
+        return b;
+    }
 
     public Transform GetRoomPos() {
         if (roomArrows.Count == 0) {
@@ -35,12 +42,22 @@ public class Room : MonoBehaviour {
         roomArrows.Remove(pos);
     }
 
-    public void ClearExitMarkers() {
+    public void ClearExitMarkers(Transform replacement=null) {
         foreach (Transform child in transform)
         {
             if (child.tag == "RoomArrow")
             {
                 Destroy(child.gameObject);
+            }
+        }
+
+        if (replacement) {
+            // Add doors for the unused exists
+            foreach (Transform unusedExit in roomArrows)
+            {
+                var door = Instantiate(replacement, unusedExit.transform.position, unusedExit.transform.rotation);
+                // Congrats! I'm your Dad now!!
+                door.SetParent(transform);
             }
         }
     }
