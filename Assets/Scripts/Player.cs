@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour
 {
@@ -96,6 +97,11 @@ public class Player : MonoBehaviour
             }
             _bulletCount = BulletCooldown;
             _audioSource.PlayOneShot(ShootSfx);
+        }
+
+        if (Input.GetButton("Submit") && Health <= 0) {
+            // Reset back to title
+            SceneManager.LoadScene("Title");
         }
     }
 

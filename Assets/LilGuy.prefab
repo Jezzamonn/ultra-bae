@@ -106,6 +106,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e337219cddcbd4990abe71f1844afaf1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  DieSfx: {fileID: 8300000, guid: 7c225a39707bc43fd9cb4ab431ff3d64, type: 3}
   Coin: {fileID: 54287738487213430, guid: 2ba7dc44e460349ec845007060cda318, type: 2}
   Speed: 2
 --- !u!136 &136771616938247446

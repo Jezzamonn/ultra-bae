@@ -5,6 +5,10 @@ using UnityEngine.SceneManagement;
 
 public class TitleHandler : MonoBehaviour {
 
+    public int CurScreen = 0;
+    public List<RectTransform> Screens;
+    public bool SkipToGame = false;
+
 	// Use this for initialization
 	void Start () {
 		
@@ -14,7 +18,16 @@ public class TitleHandler : MonoBehaviour {
 	void Update () {
 		
         if (Input.GetButtonDown("Submit")) {
-            SceneManager.LoadScene("Level");
+
+            Screens[CurScreen].gameObject.SetActive(false);
+            CurScreen++;
+            if (CurScreen < Screens.Count) {
+                Screens[CurScreen].gameObject.SetActive(true);
+            }
+            else {
+                SceneManager.LoadScene("Level");
+            }
+
         }
 	}
 }
