@@ -6,15 +6,27 @@ public class LilGuy : Enemy {
 
     public Rigidbody Coin;
 
+    public float Speed = 0.5f;
+
+    Transform _player;
+    Rigidbody _body;
+
 	// Use this for initialization
 	void Start () {
         Health = 1;
+        _player = GameObject.FindGameObjectWithTag("Player").transform;
+        _body = GetComponent<Rigidbody>();
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		
 	}
+
+    private void FixedUpdate()
+    {
+        _body.MovePosition(_body.position + Speed * Time.fixedDeltaTime * (_player.position - transform.position).normalized);
+    }
 
     private void OnCollisionEnter(Collision collision)
     {

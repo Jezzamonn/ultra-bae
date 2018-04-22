@@ -4,15 +4,26 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour {
 
-	// Use this for initialization
-	void Start () {
-		
-	}
+    public float Speed = 5f;
+    public Vector3 Dir;
+
+    Rigidbody _body;
+
+    // Use this for initialization
+    void Start()
+    {
+        _body = GetComponent<Rigidbody>();
+    }
 	
 	// Update is called once per frame
 	void Update () {
 		
 	}
+
+    void FixedUpdate()
+    {
+        _body.MovePosition(_body.position + Speed * Time.fixedDeltaTime * Dir);
+    }
 
     private void OnTriggerEnter(Collider other)
     {
@@ -20,7 +31,6 @@ public class Bullet : MonoBehaviour {
             Enemy enemy = other.gameObject.GetComponent<Enemy>();
             enemy.TakeDamage();
 
-            Destroy(gameObject);
         }
     }
 }

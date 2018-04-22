@@ -9,7 +9,7 @@ public class Player : MonoBehaviour
     public float HurtPushBack = 1f;
     public float HurtJump = 1f;
 
-    public Rigidbody Bullet;
+    public Bullet Bullet;
 
     Rigidbody _body;
     Vector3 _moveDir;
@@ -31,8 +31,8 @@ public class Player : MonoBehaviour
 
         if (Input.GetButtonDown("Jump")) {
             // Spawn Bullet
-            Rigidbody bullet = Instantiate(Bullet, transform.position + 0.5f * Vector3.up, Quaternion.identity);
-            bullet.AddForce(5f * _bulletDir, ForceMode.VelocityChange);
+            Bullet bullet = Instantiate(Bullet, transform.position + 0.5f * Vector3.up, Quaternion.identity);
+            bullet.Dir = _bulletDir;
         }
     }
 
@@ -53,7 +53,7 @@ public class Player : MonoBehaviour
 
     private void CheckHurt(Collider other)
     {
-        if (other.tag == "HurtPlayer")
+        if (other.tag == "HurtPlayer" || other.tag == "Enemy")
         {
             _body.AddForce(
                 HurtPushBack * (transform.position - other.transform.position) +
