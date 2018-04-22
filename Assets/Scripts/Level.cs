@@ -45,7 +45,7 @@ public class Level : MonoBehaviour
         ActualRooms.Add(firstRoom);
         FreeRooms.Add(firstRoom);
 
-        while (ActualRooms.Count < 25)
+        while (ActualRooms.Count < 15)
         {
             Room parentRoom = FreeRooms.PickRandom();
             Transform pos = parentRoom.GetRoomPos();
