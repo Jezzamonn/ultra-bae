@@ -5,6 +5,7 @@ using System.Collections.Generic;
 public class Level : MonoBehaviour
 {
     public List<Room> RoomTemplates;
+    public List<Transform> SpawnThings;
     public Transform Door;
 
     private List<Room> ActualRooms;
@@ -88,6 +89,19 @@ public class Level : MonoBehaviour
         foreach (Room room in ActualRooms)
         {
             room.ClearExitMarkers(Door);
+            // Just fill it with stuff for the moment? >:)
+            for (int i = 0; i < 3; i ++) { // instead of an infinite loop just to be safe
+                var pos = room.GetSpawnPos();
+                if (pos == null) {
+                    break;
+                }
+
+                Instantiate(SpawnThings.PickRandom(), pos.position, Quaternion.identity);
+                // Very important! :)
+                room.RemoveSpawnPos(pos);
+            }
+
+            room.ClearRespawnThingos();
         }
     }
 }

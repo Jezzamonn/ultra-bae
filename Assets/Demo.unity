@@ -125,6 +125,7 @@ GameObject:
   - component: {fileID: 87067637}
   - component: {fileID: 87067636}
   - component: {fileID: 87067640}
+  - component: {fileID: 87067641}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -207,6 +208,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Offset: 20
+--- !u!114 &87067641
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 87067635}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0bc9a3926aaab4d639a77eb2380d9854, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  PixelShader: {fileID: 4800000, guid: 44c8c40665b3c46e2978588134e3b52a, type: 3}
+  ZoomLevel: 2
+  AddBorder: 1
+  ColorDarkest: {r: 0.094, g: 0.188, b: 0.188, a: 1}
+  ColorDark: {r: 0.314, g: 0.471, b: 0.408, a: 1}
+  ColorLight: {r: 0.659, g: 0.753, b: 0.69, a: 1}
+  ColorLightest: {r: 0.878, g: 0.941, b: 0.91, a: 1}
 --- !u!1 &386870567
 GameObject:
   m_ObjectHideFlags: 0
@@ -303,6 +322,9 @@ MonoBehaviour:
   - {fileID: 114901576574018554, guid: 1bb6e1ef00cc34a6f8ae68eb47bd3579, type: 2}
   - {fileID: 114248529360948860, guid: 4ed6d4e61199d4712b5c819574641e65, type: 2}
   - {fileID: 114755183899194728, guid: 482bd4ce8a4f740a3a6f5186ad9b7df7, type: 2}
+  SpawnThings:
+  - {fileID: 4606975940685192, guid: 074bdbb2aa68747cd9421c96c1831e76, type: 2}
+  - {fileID: 4595258605994904, guid: 49efb5c26806c4b209ed42f4f5205341, type: 2}
   Door: {fileID: 4544754457888892, guid: 485ce80469b5e4ab49725ce92041f0a1, type: 2}
 --- !u!4 &1189638111
 Transform:
@@ -330,7 +352,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4423691958317848, guid: c4a3af2a3a19542358f54f10cce1237b, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4423691958317848, guid: c4a3af2a3a19542358f54f10cce1237b, type: 2}
       propertyPath: m_LocalPosition.z
@@ -355,11 +377,6 @@ Prefab:
     - target: {fileID: 4423691958317848, guid: c4a3af2a3a19542358f54f10cce1237b, type: 2}
       propertyPath: m_RootOrder
       value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 114123580670719694, guid: c4a3af2a3a19542358f54f10cce1237b,
-        type: 2}
-      propertyPath: NumBullets
-      value: 5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: c4a3af2a3a19542358f54f10cce1237b, type: 2}

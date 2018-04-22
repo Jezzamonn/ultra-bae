@@ -29,6 +29,10 @@ public class CameraAtPlayer : MonoBehaviour
         {
             foreach (var hit in _hideStuffHits)
             {
+                if (hit.collider == null)
+                {
+                    continue;
+                }
                 var r = hit.collider.GetComponent<Renderer>();
                 if (r)
                 {

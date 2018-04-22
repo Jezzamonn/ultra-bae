@@ -41,6 +41,14 @@ public class Player : MonoBehaviour
             _bulletCount -= Time.deltaTime;
         }
 
+        // Get the ground normal
+        RaycastHit hit;
+        Vector3 bulletUp = Vector3.up;
+        if (Physics.Raycast(transform.position, -transform.up, out hit, 1f))
+        {
+            bulletUp = hit.normal;
+        }
+
         if (Input.GetButton("Jump") && _bulletCount <= 0)
         {
             // Spawn Bullet
@@ -51,7 +59,9 @@ public class Player : MonoBehaviour
                     amt = (float) i / (NumBullets - 1);
                 }
                 Bullet bullet = Instantiate(Bullet, transform.position + 0.5f * Vector3.up, Quaternion.identity);
-                Vector3 dir = Quaternion.AngleAxis((amt - 0.5f) * BulletSpread, Vector3.up) * _bulletDir;
+                Vector3 dir = Vector3.ProjectOnPlane(
+                    Quaternion.AngleAxis((amt - 0.5f) * BulletSpread, Vector3.up) * _bulletDir,
+                    bulletUp);
 
                 bullet.Dir = dir;
 

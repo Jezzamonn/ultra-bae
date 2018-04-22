@@ -5,15 +5,20 @@ using UnityEngine;
 public class Room : MonoBehaviour {
 
     IList<Transform> roomArrows;
+    IList<Transform> spawnPositions;
 
 	// Use this for initialization
 	void Awake () {
         roomArrows = new List<Transform>();
+        spawnPositions = new List<Transform>();
         foreach (Transform child in transform)
         {
             if (child.tag == "RoomArrow")
             {
                 roomArrows.Add(child);
+            }
+            else if (child.tag == "Respawn") {
+                spawnPositions.Add(child);
             }
         }
 	}
@@ -42,6 +47,19 @@ public class Room : MonoBehaviour {
         roomArrows.Remove(pos);
     }
 
+    public Transform GetSpawnPos() {
+        if (spawnPositions.Count == 0)
+        {
+            return null;
+        }
+        return spawnPositions.PickRandom();
+    }
+
+    public void RemoveSpawnPos(Transform pos)
+    {
+        spawnPositions.Remove(pos);
+    }
+
     public void ClearExitMarkers(Transform replacement=null) {
         foreach (Transform child in transform)
         {
@@ -58,6 +76,18 @@ public class Room : MonoBehaviour {
                 var door = Instantiate(replacement, unusedExit.transform.position, unusedExit.transform.rotation);
                 // Congrats! I'm your Dad now!!
                 door.SetParent(transform);
+            }
+        }
+        roomArrows.Clear();
+    }
+
+    public void ClearRespawnThingos() {
+        spawnPositions.Clear();
+        foreach (Transform child in transform)
+        {
+            if (child.tag == "Respawn")
+            {
+                Destroy(child.gameObject);
             }
         }
     }
