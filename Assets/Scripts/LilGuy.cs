@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class LilGuy : Enemy {
 
+    public AudioClip DieSfx;
     public Rigidbody Coin;
 
     public float Speed = 0.5f;
@@ -56,6 +57,8 @@ public class LilGuy : Enemy {
                 transform.position + Vector3.up + Random.insideUnitSphere,
                 Quaternion.identity);
             coin.AddForce(Random.insideUnitSphere + Vector3.up, ForceMode.Impulse);
+            Player p = _player.GetComponent<Player>();
+            p.AudioSource.PlayOneShot(DieSfx);
         }
     }
 }

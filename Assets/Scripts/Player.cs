@@ -19,6 +19,20 @@ public class Player : MonoBehaviour
     public float BulletSpeed = 5f;
     public float BulletLength = 10f;
 
+
+    public AudioClip HurtSfx;
+    public AudioClip ShootSfx;
+    public AudioClip CollectSfx;
+    private AudioSource _audioSource;
+    public AudioSource AudioSource
+    {
+        get
+        {
+            return _audioSource;
+        }
+    }
+
+
     private float _bulletCount = 0;
 
     public Bullet Bullet;
@@ -31,6 +45,7 @@ public class Player : MonoBehaviour
     void Start()
     {
         _body = GetComponent<Rigidbody>();
+        _audioSource = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -46,7 +61,8 @@ public class Player : MonoBehaviour
         {
             _bulletCount -= Time.deltaTime;
         }
-        if (_invincibleCount > 0) {
+        if (_invincibleCount > 0)
+        {
             _invincibleCount -= Time.deltaTime;
         }
 
@@ -58,14 +74,15 @@ public class Player : MonoBehaviour
             bulletUp = hit.normal;
         }
 
-        if (Input.GetButton("Jump") && _bulletCount <= 0)
+        if (Input.GetButton("Jump") && _bulletCount <= 0 && Health > 0)
         {
             // Spawn Bullet
-            for (int i = 0; i < NumBullets; i ++)
+            for (int i = 0; i < NumBullets; i++)
             {
                 float amt = 0.5f;
-                if (NumBullets > 1) {
-                    amt = (float) i / (NumBullets - 1);
+                if (NumBullets > 1)
+                {
+                    amt = (float)i / (NumBullets - 1);
                 }
                 Bullet bullet = Instantiate(Bullet, transform.position + 0.5f * Vector3.up, Quaternion.identity);
                 Vector3 dir = Vector3.ProjectOnPlane(
@@ -78,13 +95,15 @@ public class Player : MonoBehaviour
                 bullet.Length = BulletLength;
             }
             _bulletCount = BulletCooldown;
+            _audioSource.PlayOneShot(ShootSfx);
         }
     }
 
     void FixedUpdate()
     {
         // Can't move if you're dead, can you??
-        if (Health > 0) {
+        if (Health > 0)
+        {
             _body.MovePosition(_body.position + Speed * Time.fixedDeltaTime * _moveDir);
         }
     }
@@ -107,11 +126,15 @@ public class Player : MonoBehaviour
         }
     }
 
-    private void TakeDamage(Vector3 flyAwayFrom) {
-        if (_invincibleCount <= 0) {
+    private void TakeDamage(Vector3 flyAwayFrom)
+    {
+        if (_invincibleCount <= 0)
+        {
             Health--;
             _invincibleCount = _invincibleTime;
-            // TODO: sound effect
+
+            _audioSource.PlayOneShot(HurtSfx);
+
             // TODO: die
         }
         // TODO: Project on plane here
@@ -119,5 +142,10 @@ public class Player : MonoBehaviour
             HurtPushBack * (transform.position - flyAwayFrom) +
             HurtJump * Vector3.up,
             ForceMode.Impulse);
+    }
+
+    public void Collect()
+    {
+        _audioSource.PlayOneShot(CollectSfx, 0.5f);
     }
 }

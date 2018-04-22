@@ -6,7 +6,6 @@ public class Coin : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		
 	}
 	
 	// Update is called once per frame
@@ -18,7 +17,9 @@ public class Coin : MonoBehaviour {
     {
         if (other.gameObject.tag == "Player")
         {
-            GameObject.Destroy(gameObject);
+            Player p = other.GetComponent<Player>();
+            p.Collect();
+            Destroy(gameObject);
         }
     }
 
