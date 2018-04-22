@@ -70,7 +70,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1651828000672020}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 2.711, z: -1.5}
+  m_LocalPosition: {x: 0, y: 2.711, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4423691958317848}
@@ -83,7 +83,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1235603245932008}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 2.68, y: 0, z: -2.44}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4557253430593062}
@@ -210,6 +210,9 @@ MonoBehaviour:
   Speed: 7
   HurtPushBack: 5
   HurtJump: 4
+  NumBullets: 5
+  BulletSpread: 60
+  BulletCooldown: 0.4
   Bullet: {fileID: 114199295763057366, guid: 55c32c74b6acf4476a646b1287a46f3e, type: 2}
 --- !u!136 &136533332139647750
 CapsuleCollider:

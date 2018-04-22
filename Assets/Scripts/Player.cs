@@ -52,7 +52,9 @@ public class Player : MonoBehaviour
                 }
                 Bullet bullet = Instantiate(Bullet, transform.position + 0.5f * Vector3.up, Quaternion.identity);
                 Vector3 dir = Quaternion.AngleAxis((amt - 0.5f) * BulletSpread, Vector3.up) * _bulletDir;
+
                 bullet.Dir = dir;
+
                 bullet.transform.forward = dir;
             }
             _bulletCount = BulletCooldown;
