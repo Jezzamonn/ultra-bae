@@ -34,20 +34,47 @@ public class SocketIoClient : MonoBehaviour
         if (socket == null)
         {
             socket = IO.Socket(serverURL);
-            socket.On(Socket.EVENT_CONNECT, () => {
+            socket.On(Socket.EVENT_CONNECT, () =>
+            {
                 // Access to Unity UI is not allowed in a background thread, so let's put into a shared variable
                 Debug.Log("Socket.IO connected.");
                 // Send the join room request
                 socket.Emit("unity connect", "jezzamon");
             });
-            socket.On("set stat", (data) => {
+            socket.On("set stat", (data) =>
+            {
                 // Find the player
 
                 var values = JsonConvert.DeserializeObject<Dictionary<string, string>>(data.ToString());
 
-                if (values.ContainsKey("health")) {
-                    _player.MaxHealth = int.Parse(values["health"]);
+                // Desperate times call for desperate measures
+                if (values.ContainsKey("MaxHealth"))
+                {
+                    _player.MaxHealth = int.Parse(values["MaxHealth"]);
                 }
+                if (values.ContainsKey("Speed"))
+                {
+                    _player.Speed = float.Parse(values["Speed"]);
+                }
+                if (values.ContainsKey("NumBullets"))
+                {
+                    _player.NumBullets = int.Parse(values["NumBullets"]);
+                }
+                if (values.ContainsKey("BulletSpread"))
+                {
+                    _player.BulletSpread = float.Parse(values["BulletSpread"]);
+                }
+                if (values.ContainsKey("BulletCooldown"))
+                {
+                    _player.BulletCooldown = float.Parse(values["BulletCooldown"]);
+                }
+                if (values.ContainsKey("BulletLength"))
+                {
+                    _player.BulletLength = float.Parse(values["BulletLength"]);
+                }
+
+                // DEBUG Bonus so I can test without dying
+                _player.Health = _player.MaxHealth;
             });
         }
     }
