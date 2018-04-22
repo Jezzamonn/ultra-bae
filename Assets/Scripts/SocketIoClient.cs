@@ -9,6 +9,7 @@ public class SocketIoClient : MonoBehaviour
 {
     public string serverURL = "http://35.227.49.175:3000";
 
+    Player _player;
     protected Socket socket = null;
 
     void Destroy()
@@ -20,6 +21,7 @@ public class SocketIoClient : MonoBehaviour
     void Start()
     {
         DoOpen();
+        _player = FindObjectOfType<Player>();
     }
 
     // Update is called once per frame
@@ -39,10 +41,13 @@ public class SocketIoClient : MonoBehaviour
                 socket.Emit("unity connect", "jezzamon");
             });
             socket.On("set stat", (data) => {
-                string str = data.ToString();
+                // Find the player
 
-                Debug.Log(str);
-                // TODO: Update player stats
+                var values = JsonConvert.DeserializeObject<Dictionary<string, string>>(data.ToString());
+
+                if (values.ContainsKey("health")) {
+                    _player.MaxHealth = int.Parse(values["health"]);
+                }
             });
         }
     }

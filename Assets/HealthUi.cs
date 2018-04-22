@@ -16,11 +16,17 @@ public class HealthUi : MonoBehaviour {
     {
         _player = FindObjectOfType<Player>();
 
+        _goodHearts = new List<SpriteRenderer>();
+        _badHearts = new List<SpriteRenderer>();
         MakeHearts();
 	}
 	
 	// Update is called once per frame
 	void Update () {
+        if (_player.MaxHealth != _goodHearts.Count) {
+            MakeHearts();
+        }
+
         for (int i = 0; i < _goodHearts.Count; i ++) {
             _goodHearts[i].enabled = (i < _player.Health);
             _badHearts[i].enabled = !(i < _player.Health);
@@ -28,9 +34,15 @@ public class HealthUi : MonoBehaviour {
 	}
 
     void MakeHearts() {
-        // TODO: clear existing stuff properly
-        _goodHearts = new List<SpriteRenderer>();
-        _badHearts = new List<SpriteRenderer>();
+        foreach (var heart in _goodHearts) {
+            Destroy(heart.gameObject);
+        }
+        foreach (var heart in _badHearts) {
+            Destroy(heart.gameObject);
+        }
+
+        _goodHearts.Clear();
+        _badHearts.Clear();
 
         for (int i = 0; i < _player.MaxHealth; i ++) {
             var good = Instantiate(GoodHeart, 80 * i * Vector3.right, Quaternion.identity);
