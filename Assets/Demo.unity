@@ -587,10 +587,9 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 114123580670719694, guid: c4a3af2a3a19542358f54f10cce1237b,
         type: 2}
-      propertyPath: Bullet
-      value: 
-      objectReference: {fileID: 114397973384531710, guid: eb92fb0863f7a4619b7f1e0bc4fb1312,
-        type: 2}
+      propertyPath: NumBullets
+      value: 5
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: c4a3af2a3a19542358f54f10cce1237b, type: 2}
   m_IsPrefabParent: 0

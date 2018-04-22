@@ -4,10 +4,16 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    
+
     public float Speed = 1f;
     public float HurtPushBack = 1f;
     public float HurtJump = 1f;
+
+    public int NumBullets = 3;
+    public float BulletSpread = 60f;
+    public float BulletCooldown = 0.4f;
+
+    private float _bulletCount = 0;
 
     public Bullet Bullet;
 
@@ -15,7 +21,7 @@ public class Player : MonoBehaviour
     Vector3 _moveDir;
     Vector3 _bulletDir;
 
-   // Use this for initialization
+    // Use this for initialization
     void Start()
     {
         _body = GetComponent<Rigidbody>();
@@ -25,14 +31,31 @@ public class Player : MonoBehaviour
     void Update()
     {
         _moveDir = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
-        if (_moveDir.sqrMagnitude > 0.1) {
+        if (_moveDir.sqrMagnitude > 0.1)
+        {
             _bulletDir = _moveDir.normalized;
         }
 
-        if (Input.GetButtonDown("Jump")) {
+        if (_bulletCount > 0)
+        {
+            _bulletCount -= Time.deltaTime;
+        }
+
+        if (Input.GetButton("Jump") && _bulletCount <= 0)
+        {
             // Spawn Bullet
-            Bullet bullet = Instantiate(Bullet, transform.position + 0.5f * Vector3.up, Quaternion.identity);
-            bullet.Dir = _bulletDir;
+            for (int i = 0; i < NumBullets; i ++)
+            {
+                float amt = 0.5f;
+                if (NumBullets > 1) {
+                    amt = (float) i / (NumBullets - 1);
+                }
+                Bullet bullet = Instantiate(Bullet, transform.position + 0.5f * Vector3.up, Quaternion.identity);
+                Vector3 dir = Quaternion.AngleAxis((amt - 0.5f) * BulletSpread, Vector3.up) * _bulletDir;
+                bullet.Dir = dir;
+                bullet.transform.forward = dir;
+            }
+            _bulletCount = BulletCooldown;
         }
     }
 
