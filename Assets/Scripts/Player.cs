@@ -67,6 +67,10 @@ public class Player : MonoBehaviour
             _invincibleCount -= Time.deltaTime;
         }
 
+        if (transform.position.y < -2000) {
+            TakeDamage(Vector3.zero);
+        }
+
         // Get the ground normal
         RaycastHit hit;
         Vector3 bulletUp = Vector3.up;
@@ -100,8 +104,8 @@ public class Player : MonoBehaviour
         }
 
         if (Input.GetButton("Submit") && Health <= 0) {
-            // Reset back to title
-            SceneManager.LoadScene("Title");
+            // Just reset the game
+            SceneManager.LoadScene("Level");
         }
     }
 
