@@ -26,7 +26,8 @@ public class TitleHandler : MonoBehaviour {
             nextScreen = Input.GetKeyDown(KeyCode.Return) && UserNameInput.text.Length > 0;
         }
         if (CurScreen == 6) {
-            nextScreen = Client.PhoneConnected;
+            // Also allow a user to press cancel to skip having a phone connected
+            nextScreen = Client.PhoneConnected || Input.GetButtonDown("Cancel");
         }
 		
         if (nextScreen) {
