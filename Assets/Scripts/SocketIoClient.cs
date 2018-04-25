@@ -96,6 +96,7 @@ public class SocketIoClient : MonoBehaviour
                 Debug.Log("Socket.IO connected.");
                 // Send the join room request
                 lock(thisLock) {
+                    PhoneConnected = false;
                     StartPinging = true;
                 }
             });
