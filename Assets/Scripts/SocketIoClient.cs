@@ -11,6 +11,10 @@ public class SocketIoClient : MonoBehaviour
 
     protected Socket socket = null;
 
+    // for thread mumbo jumbo
+    private Object thisLock = new Object();
+
+    public bool StartPinging = false;
     public bool PhoneConnected = false;
     public string UserName = "";
 
@@ -32,39 +36,53 @@ public class SocketIoClient : MonoBehaviour
     {
         var p = FindObjectOfType<Player>();
 
-        if (nextData != null)
+        if (p != null && nextData != null)
         {
-            // Desperate times call for desperate measures
-            if (nextData.ContainsKey("MaxHealth"))
-            {
-                p.MaxHealth = int.Parse(nextData["MaxHealth"]);
-            }
-            if (nextData.ContainsKey("Speed"))
-            {
-                p.Speed = float.Parse(nextData["Speed"]);
-            }
-            if (nextData.ContainsKey("NumBullets"))
-            {
-                p.NumBullets = int.Parse(nextData["NumBullets"]);
-            }
-            if (nextData.ContainsKey("BulletSpread"))
-            {
-                p.BulletSpread = float.Parse(nextData["BulletSpread"]);
-            }
-            if (nextData.ContainsKey("BulletCooldown"))
-            {
-                p.BulletCooldown = float.Parse(nextData["BulletCooldown"]);
-            }
-            if (nextData.ContainsKey("BulletLength"))
-            {
-                p.BulletLength = float.Parse(nextData["BulletLength"]);
-            }
+            lock(thisLock) {
+                // between grabbing the lock it got null? That's no good.
+                if (nextData == null) {
+                    return;
+                }
 
-            // DEBUG Bonus so I can test without dying
-            p.Health = p.MaxHealth;
+                // Desperate times call for desperate measures
+                if (nextData.ContainsKey("MaxHealth"))
+                {
+                    p.MaxHealth = int.Parse(nextData["MaxHealth"]);
+                }
+                if (nextData.ContainsKey("Speed"))
+                {
+                    p.Speed = float.Parse(nextData["Speed"]);
+                }
+                if (nextData.ContainsKey("NumBullets"))
+                {
+                    p.NumBullets = int.Parse(nextData["NumBullets"]);
+                }
+                if (nextData.ContainsKey("BulletSpread"))
+                {
+                    p.BulletSpread = float.Parse(nextData["BulletSpread"]);
+                }
+                if (nextData.ContainsKey("BulletCooldown"))
+                {
+                    p.BulletCooldown = float.Parse(nextData["BulletCooldown"]);
+                }
+                if (nextData.ContainsKey("BulletLength"))
+                {
+                    p.BulletLength = float.Parse(nextData["BulletLength"]);
+                }
 
-            // Clear it now we've updated stuff
-            nextData = null;
+                // DEBUG Bonus so I can test without dying
+                p.Health = p.MaxHealth;
+
+                // Clear it now we've updated stuff
+                nextData = null;
+            }
+        }
+
+        if (StartPinging) {
+            lock(thisLock) {
+                StartCoroutine(PingServerUntilIGotAPhone());
+                StartPinging = false;
+            }
         }
     }
 
@@ -77,22 +95,43 @@ public class SocketIoClient : MonoBehaviour
             {
                 Debug.Log("Socket.IO connected.");
                 // Send the join room request
-                socket.Emit("unity connect", UserName);
+                lock(thisLock) {
+                    StartPinging = true;
+                }
             });
 
             socket.On("phone connect", () =>
             {
                 Debug.Log("A phone connected!");
                 // A phone joined!
-                PhoneConnected = true;
+                lock(thisLock) {
+                    PhoneConnected = true;
+                }
             });
 
             socket.On("set stat", (data) =>
             {
                 // This must mean a phone is connected.
-                PhoneConnected = true;
-                nextData = JsonConvert.DeserializeObject<Dictionary<string, string>>(data.ToString());
+                lock(thisLock) {
+                    PhoneConnected = true;
+                    nextData = JsonConvert.DeserializeObject<Dictionary<string, string>>(data.ToString());
+                }
             });
+        }
+    }
+
+    /// <summary>
+    /// Pings the server every second until a phone connects.
+    /// </summary>
+    IEnumerator PingServerUntilIGotAPhone()
+    {
+        while (!PhoneConnected) {
+            if (socket != null)
+            {
+                Debug.Log(string.Format("Trying to join {0}", UserName));
+                socket.Emit("unity connect", UserName);
+            }
+            yield return new WaitForSeconds(10f);
         }
     }
 
