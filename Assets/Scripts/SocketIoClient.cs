@@ -38,51 +38,49 @@ public class SocketIoClient : MonoBehaviour
 
         if (p != null && nextData != null)
         {
-            lock(thisLock) {
-                // between grabbing the lock it got null? That's no good.
-                if (nextData == null) {
-                    return;
-                }
-
-                // Desperate times call for desperate measures
-                if (nextData.ContainsKey("MaxHealth"))
-                {
-                    p.MaxHealth = int.Parse(nextData["MaxHealth"]);
-                }
-                if (nextData.ContainsKey("Speed"))
-                {
-                    p.Speed = float.Parse(nextData["Speed"]);
-                }
-                if (nextData.ContainsKey("NumBullets"))
-                {
-                    p.NumBullets = int.Parse(nextData["NumBullets"]);
-                }
-                if (nextData.ContainsKey("BulletSpread"))
-                {
-                    p.BulletSpread = float.Parse(nextData["BulletSpread"]);
-                }
-                if (nextData.ContainsKey("BulletCooldown"))
-                {
-                    p.BulletCooldown = float.Parse(nextData["BulletCooldown"]);
-                }
-                if (nextData.ContainsKey("BulletLength"))
-                {
-                    p.BulletLength = float.Parse(nextData["BulletLength"]);
-                }
-
-                // DEBUG Bonus so I can test without dying
-                p.Health = p.MaxHealth;
-
-                // Clear it now we've updated stuff
-                nextData = null;
+            // between grabbing the lock it got null? That's no good.
+            if (nextData == null)
+            {
+                return;
             }
+
+            // Desperate times call for desperate measures
+            if (nextData.ContainsKey("MaxHealth"))
+            {
+                p.MaxHealth = int.Parse(nextData["MaxHealth"]);
+            }
+            if (nextData.ContainsKey("Speed"))
+            {
+                p.Speed = float.Parse(nextData["Speed"]);
+            }
+            if (nextData.ContainsKey("NumBullets"))
+            {
+                p.NumBullets = int.Parse(nextData["NumBullets"]);
+            }
+            if (nextData.ContainsKey("BulletSpread"))
+            {
+                p.BulletSpread = float.Parse(nextData["BulletSpread"]);
+            }
+            if (nextData.ContainsKey("BulletCooldown"))
+            {
+                p.BulletCooldown = float.Parse(nextData["BulletCooldown"]);
+            }
+            if (nextData.ContainsKey("BulletLength"))
+            {
+                p.BulletLength = float.Parse(nextData["BulletLength"]);
+            }
+
+            // DEBUG Bonus so I can test without dying
+            p.Health = p.MaxHealth;
+
+            // Clear it now we've updated stuff
+            nextData = null;
         }
 
-        if (StartPinging) {
-            lock(thisLock) {
-                StartCoroutine(PingServerUntilIGotAPhone());
-                StartPinging = false;
-            }
+        if (StartPinging)
+        {
+            StartCoroutine(PingServerUntilIGotAPhone());
+            StartPinging = false;
         }
     }
 
@@ -95,28 +93,22 @@ public class SocketIoClient : MonoBehaviour
             {
                 Debug.Log("Socket.IO connected.");
                 // Send the join room request
-                lock(thisLock) {
-                    PhoneConnected = false;
-                    StartPinging = true;
-                }
+                PhoneConnected = false;
+                StartPinging = true;
             });
 
             socket.On("phone connect", () =>
             {
                 Debug.Log("A phone connected!");
                 // A phone joined!
-                lock(thisLock) {
-                    PhoneConnected = true;
-                }
+                PhoneConnected = true;
             });
 
             socket.On("set stat", (data) =>
             {
                 // This must mean a phone is connected.
-                lock(thisLock) {
-                    PhoneConnected = true;
-                    nextData = JsonConvert.DeserializeObject<Dictionary<string, string>>(data.ToString());
-                }
+                PhoneConnected = true;
+                nextData = JsonConvert.DeserializeObject<Dictionary<string, string>>(data.ToString());
             });
         }
     }
@@ -126,7 +118,8 @@ public class SocketIoClient : MonoBehaviour
     /// </summary>
     IEnumerator PingServerUntilIGotAPhone()
     {
-        while (!PhoneConnected) {
+        while (!PhoneConnected)
+        {
             if (socket != null)
             {
                 Debug.Log(string.Format("Trying to join {0}", UserName));
