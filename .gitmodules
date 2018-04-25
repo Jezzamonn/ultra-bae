@@ -1,0 +1,3 @@
+[submodule "UltraBaeServer"]
+	path = UltraBaeServer
+	url = git@github.com:Jezzamonn/ultrabae-server.git
